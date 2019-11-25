@@ -35,7 +35,7 @@ class SleepTrackerViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-    //all coroutine's job in the ViewModel
+    // all coroutine's job in the ViewModel
     private var viewModelJob = Job()
 
     override fun onCleared() {
@@ -43,7 +43,7 @@ class SleepTrackerViewModel(
         viewModelJob.cancel()
     }
 
-    //define dispatcher and job to scope
+    // define dispatcher and job to scope
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private val tonight = MutableLiveData<SleepNight>()
@@ -52,6 +52,15 @@ class SleepTrackerViewModel(
 
     val nightsString: LiveData<Spanned> = Transformations.map(nights) { nights ->
         formatNights(nights, application.resources)
+    }
+
+    // kicks navigation when changed
+    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
+    val navigateToSleepQuality: LiveData<SleepNight>
+        get() = _navigateToSleepQuality
+
+    fun doneNavigating() {
+        _navigateToSleepQuality.value = null
     }
 
     init {
@@ -97,6 +106,8 @@ class SleepTrackerViewModel(
             oldNight.endTimeMilli = System.currentTimeMillis()
 
             update(oldNight)
+
+            _navigateToSleepQuality.value = oldNight // notify
         }
     }
 
@@ -118,8 +129,6 @@ class SleepTrackerViewModel(
             database.clear()
         }
     }
-
-
 
 
 }
