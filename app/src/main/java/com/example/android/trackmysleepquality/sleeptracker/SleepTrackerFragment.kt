@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -64,6 +65,16 @@ class SleepTrackerFragment : Fragment() {
                 this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(it.nightId))
                 viewModel.doneNavigating() // reset state
             }
+        })
+
+        viewModel.showSnackbarEvent.observe(this, Observer {
+            if (it == false) return@Observer
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                getString(R.string.cleared_message),
+                Snackbar.LENGTH_SHORT
+            ).show()
+            viewModel.doneShowSnackbar()
         })
 
         return binding.root
