@@ -104,6 +104,14 @@ sealed class DataItem {
         override val id = Long.MIN_VALUE
     }
     abstract val id: Long
+
+//    override fun equals(other: Any?): Boolean {
+//        return if(this is SleepNightItem) {
+//            this.equals(other)
+//        } else {
+//            (other as? DataItem)?.id == id
+//        }
+//    }
 }
 
 class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
